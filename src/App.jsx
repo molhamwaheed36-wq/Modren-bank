@@ -1,6 +1,16 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { storage } from "./storage";
 import {
+  registerGame,
+  addPlayer,
+  getPlayer,
+  setPlayerUnlimited,
+  addPlayerPurchase,
+  canOpenGame,
+  getBalance,
+  getPurchases
+} from "./src/gameBank";
+import {
   ArrowRightLeft,
   Plus,
   History,
