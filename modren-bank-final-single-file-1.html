@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Modren Bank</title>
+<style>
+:root{
+  --bg:#0b1020;--panel:#121a2d;--panel2:#18233b;--text:#f5f7fb;--muted:#9ca8bf;
+  --line:#293550;--primary:#6d7cff;--primary2:#8b5cf6;--good:#22c55e;--bad:#ef4444;--warn:#f59e0b;
+  --shadow:0 18px 50px rgba(0,0,0,.28);--radius:20px
+}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:
+radial-gradient(circle at 10% 0%,#26345e 0,transparent 32%),linear-gradient(145deg,#070b16,#10182b 55%,#0b1020);
+color:var(--text);min-height:100vh}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.hidden{display:none!important}.app{min-height:100vh}.topbar{height:72px;display:flex;align-items:center;gap:12px;padding:12px 18px;
+border-bottom:1px solid var(--line);background:rgba(9,14,28,.78);backdrop-filter:blur(16px);position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;flex:1}.logo{width:40px;height:40px;border-radius:13px;
+display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--primary2));box-shadow:0 10px 28px #5967ff44}
+.iconbtn{width:44px;height:44px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:14px}
+.layout{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 72px)}
+.sidebar{border-right:1px solid var(--line);padding:16px;background:rgba(10,15,29,.7);position:sticky;top:72px;height:calc(100vh - 72px);overflow:auto}
+.nav{display:flex;flex-direction:column;gap:7px}.nav button{text-align:start;border:0;background:transparent;color:var(--muted);padding:13px 14px;border-radius:14px}
+.nav button:hover,.nav button.active{background:linear-gradient(90deg,#6d7cff22,#8b5cf622);color:#fff}.content{padding:24px;max-width:1500px;width:100%;margin:auto}
+.pagehead{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:20px}.pagehead h1{margin:0;font-size:28px}.muted{color:var(--muted)}
+.grid{display:grid;gap:16px}.cards{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}.two{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.card{background:linear-gradient(180deg,rgba(24,35,59,.94),rgba(16,24,42,.94));border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.stat{font-size:30px;font-weight:800;margin-top:8px}.statlabel{color:var(--muted);font-size:13px}.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;font-size:12px;background:#ffffff10;border:1px solid #ffffff12}
+.good{color:#7cf3a1}.bad{color:#ff8e8e}.warn{color:#ffd27a}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:13px;padding:11px 15px;color:white;background:linear-gradient(135deg,var(--primary),var(--primary2));font-weight:700}
+.btn.secondary{background:#ffffff0b;border:1px solid var(--line)}.btn.danger{background:linear-gradient(135deg,#ef4444,#b91c1c)}
+.btn.good{background:linear-gradient(135deg,#22c55e,#15803d)}.btn.small{padding:8px 10px;font-size:12px}
+.form{display:grid;gap:12px}.field{display:grid;gap:6px}.field label{font-size:13px;color:var(--muted)}input,select,textarea{
+width:100%;padding:12px 13px;border-radius:12px;border:1px solid var(--line);background:#080e1c;color:var(--text);outline:none}
+input:focus,select:focus,textarea:focus{border-color:#7180ff;box-shadow:0 0 0 3px #7180ff1c}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:16px}.table{width:100%;border-collapse:collapse;min-width:700px}.table th,.table td{padding:12px 13px;border-bottom:1px solid var(--line);text-align:start}.table th{color:var(--muted);font-size:12px}
+.empty{text-align:center;padding:35px;color:var(--muted)}.section{margin-top:22px}.section h2{font-size:18px;margin:0 0 12px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111a2d;border:1px solid var(--line);padding:12px 16px;border-radius:14px;box-shadow:var(--shadow);z-index:100;max-width:90%}
+.modal{position:fixed;inset:0;background:#0008;display:grid;place-items:center;padding:20px;z-index:90}.modalbox{width:min(650px,100%);max-height:90vh;overflow:auto;background:#111a2d;border:1px solid var(--line);border-radius:24px;padding:22px}
+.auth{min-height:100vh;display:grid;place-items:center;padding:20px}.authbox{width:min(460px,100%);background:#111a2df2;border:1px solid var(--line);border-radius:28px;padding:30px;box-shadow:var(--shadow)}
+.authlogo{margin:auto auto 18px;width:62px;height:62px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--primary2));font-size:28px}
+.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:15px}.tabs button{white-space:nowrap;border:1px solid var(--line);background:#ffffff08;color:var(--muted);padding:9px 12px;border-radius:11px}.tabs button.active{color:white;background:#6d7cff25;border-color:#7180ff66}
+.kpi{display:flex;justify-content:space-between;gap:10px;align-items:center}.dangerzone{border-color:#ef444455;background:#ef44440a}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{position:fixed;z-index:50;left:0;top:72px;width:260px;transform:translateX(-105%);transition:.2s}.sidebar.open{transform:translateX(0)}.content{padding:16px}.pagehead h1{font-size:23px}}
+[dir="rtl"] .sidebar{border-right:0;border-left:1px solid var(--line)}
+@media(max-width:850px){[dir="rtl"] .sidebar{right:0;left:auto;transform:translateX(105%)}[dir="rtl"] .sidebar.open{transform:translateX(0)}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+(function(){
+"use strict";
+const KEY="modren_bank_v3";
+const LANGS={
+ en:{name:"English",dir:"ltr",t:{brand:"Modren Bank",tag:"Virtual economy management",login:"Sign in",setup:"Create administrator",user:"Username",pass:"Password",confirm:"Confirm password",dashboard:"Dashboard",users:"Users",games:"Games",currencies:"Currencies",products:"Shop / Products",transactions:"Transactions",permissions:"Permissions",settings:"Settings",backup:"Backup & Restore",logout:"Log out",save:"Save",cancel:"Cancel",add:"Add",edit:"Edit",delete:"Delete",freeze:"Freeze",unfreeze:"Unfreeze",ban:"Ban",unban:"Unban",balance:"Balance",status:"Status",actions:"Actions",search:"Search",name:"Name",email:"Email",id:"ID",description:"Description",price:"Price",amount:"Amount",from:"From",to:"To",create:"Create",admin:"Administrator",local:"Local-only mode",warning:"Data is stored in this browser. It is not a secure online database.",account:"Account",language:"Language",theme:"Theme",dark:"Dark",light:"Light",reset:"Reset local data",export:"Export backup",import:"Import backup",danger:"Danger zone",deleteAccount:"Delete my account",close:"Close",yes:"Yes",no:"No",overview:"Overview",totalUsers:"Total users",totalGames:"Games",totalCurrencies:"Currencies",totalProducts:"Products",totalTx:"Transactions",welcome:"Welcome back",quick:"Quick actions",newUser:"New user",newGame:"New game",newCurrency:"New currency",newProduct:"New product",noData:"Nothing here yet.",created:"Created successfully",updated:"Updated successfully",deleted:"Deleted successfully",loginBad:"Invalid username or password",passwordMismatch:"Passwords do not match",needSetup:"Create the first administrator to start.",userExists:"Username already exists",confirmDelete:"This action cannot be undone. Continue?",role:"Role",active:"Active",frozen:"Frozen",banned:"Banned",adminRole:"Admin",userRole:"User",code:"Game ID / Code",symbol:"Symbol",game:"Game",type:"Type",grant:"Grant unlimited access",revoke:"Revoke",unlimited:"Unlimited",normal:"Normal",system:"System",notes:"Notes",addFunds:"Add funds",removeFunds:"Remove funds",transfer:"Transfer",reason:"Reason",select:"Select",version:"Version",updateUrl:"Update URL",saveSettings:"Save settings",appearance:"Appearance",backupHint:"Export regularly if you want a portable copy.",confirmReset:"Reset all local data?",loginTitle:"Modren Bank",firstAdmin:"First-time setup",noAccounts:"No accounts exist yet.",}
+}},
+ ar:{name:"العربية",dir:"rtl",t:{brand:"Modren Bank",tag:"إدارة الاقتصاد الافتراضي",login:"تسجيل الدخول",setup:"إنشاء المدير",user:"اسم المستخدم",pass:"كلمة المرور",confirm:"تأكيد كلمة المرور",dashboard:"الرئيسية",users:"المستخدمون",games:"الألعاب",currencies:"العملات",products:"المتجر / المنتجات",transactions:"المعاملات",permissions:"الصلاحيات",settings:"الإعدادات",backup:"النسخ والاستعادة",logout:"تسجيل الخروج",save:"حفظ",cancel:"إلغاء",add:"إضافة",edit:"تعديل",delete:"حذف",freeze:"تجميد",unfreeze:"إلغاء التجميد",ban:"حظر",unban:"إلغاء الحظر",balance:"الرصيد",status:"الحالة",actions:"الإجراءات",search:"بحث",name:"الاسم",email:"البريد",id:"المعرّف",description:"الوصف",price:"السعر",amount:"المبلغ",from:"من",to:"إلى",create:"إنشاء",admin:"المدير",local:"وضع محلي فقط",warning:"البيانات محفوظة في هذا المتصفح وليست قاعدة بيانات إلكترونية آمنة.",account:"الحساب",language:"اللغة",theme:"المظهر",dark:"داكن",light:"فاتح",reset:"مسح البيانات المحلية",export:"تصدير نسخة احتياطية",import:"استيراد نسخة",danger:"منطقة الخطر",deleteAccount:"حذف حسابي",close:"إغلاق",yes:"نعم",no:"لا",overview:"نظرة عامة",totalUsers:"المستخدمون",totalGames:"الألعاب",totalCurrencies:"العملات",totalProducts:"المنتجات",totalTx:"المعاملات",welcome:"أهلًا بعودتك",quick:"إجراءات سريعة",newUser:"مستخدم جديد",newGame:"لعبة جديدة",newCurrency:"عملة جديدة",newProduct:"منتج جديد",noData:"لا توجد بيانات بعد.",created:"تم الإنشاء بنجاح",updated:"تم التحديث بنجاح",deleted:"تم الحذف بنجاح",loginBad:"اسم المستخدم أو كلمة المرور غير صحيحين",passwordMismatch:"كلمتا المرور غير متطابقتين",needSetup:"أنشئ حساب المدير الأول للبدء.",userExists:"اسم المستخدم موجود مسبقًا",confirmDelete:"لا يمكن التراجع عن هذا الإجراء. متابعة؟",role:"الدور",active:"نشط",frozen:"مجمّد",banned:"محظور",adminRole:"مدير",userRole:"مستخدم",code:"معرّف / رمز اللعبة",symbol:"الرمز",game:"اللعبة",type:"النوع",grant:"منح وصول غير محدود",revoke:"سحب",unlimited:"غير محدود",normal:"عادي",system:"النظام",notes:"ملاحظات",addFunds:"إضافة رصيد",removeFunds:"خصم رصيد",transfer:"تحويل",reason:"السبب",select:"اختيار",version:"الإصدار",updateUrl:"رابط التحديث",saveSettings:"حفظ الإعدادات",appearance:"المظهر",backupHint:"صدّر نسخة احتياطية بشكل دوري إذا أردت نسخة قابلة للنقل.",confirmReset:"مسح كل البيانات المحلية؟",loginTitle:"Modren Bank",firstAdmin:"الإعداد الأول",noAccounts:"لا توجد حسابات بعد."}}
+}},
+ fr:{name:"Français",dir:"ltr",t:{brand:"Modren Bank",tag:"Gestion de l'économie virtuelle",login:"Connexion",setup:"Créer l'administrateur",user:"Nom d'utilisateur",pass:"Mot de passe",confirm:"Confirmer le mot de passe",dashboard:"Tableau de bord",users:"Utilisateurs",games:"Jeux",currencies:"Monnaies",products:"Boutique / Produits",transactions:"Transactions",permissions:"Autorisations",settings:"Paramètres",backup:"Sauvegarde",logout:"Déconnexion",save:"Enregistrer",cancel:"Annuler",add:"Ajouter",edit:"Modifier",delete:"Supprimer",balance:"Solde",status:"Statut",actions:"Actions",search:"Rechercher",name:"Nom",email:"E-mail",id:"ID",description:"Description",price:"Prix",amount:"Montant",from:"De",to:"À",create:"Créer",admin:"Administrateur",local:"Mode local uniquement",warning:"Les données sont stockées dans ce navigateur et ne constituent pas une base de données en ligne sécurisée.",account:"Compte",language:"Langue",theme:"Thème",dark:"Sombre",light:"Clair",reset:"Réinitialiser",export:"Exporter",import:"Importer",danger:"Zone dangereuse",deleteAccount:"Supprimer mon compte",close:"Fermer",overview:"Aperçu",totalUsers:"Utilisateurs",totalGames:"Jeux",totalCurrencies:"Monnaies",totalProducts:"Produits",totalTx:"Transactions",welcome:"Bon retour",quick:"Actions rapides",newUser:"Nouvel utilisateur",newGame:"Nouveau jeu",newCurrency:"Nouvelle monnaie",newProduct:"Nouveau produit",noData:"Aucune donnée.",created:"Créé",updated:"Mis à jour",deleted:"Supprimé",role:"Rôle",active:"Actif",frozen:"Gelé",banned:"Banni",adminRole:"Admin",userRole:"Utilisateur",code:"ID / code du jeu",symbol:"Symbole",game:"Jeu",type:"Type",unlimited:"Illimité",normal:"Normal",notes:"Notes",addFunds:"Ajouter des fonds",removeFunds:"Retirer des fonds",transfer:"Transférer",reason:"Raison",version:"Version",updateUrl:"URL de mise à jour",saveSettings:"Enregistrer les paramètres",appearance:"Apparence",backupHint:"Exportez régulièrement une sauvegarde portable.",confirmReset:"Réinitialiser toutes les données locales ?",loginTitle:"Modren Bank",firstAdmin:"Première configuration",noAccounts:"Aucun compte."}}
+}},
+ es:{name:"Español",dir:"ltr",t:{brand:"Modren Bank",tag:"Gestión de economía virtual",login:"Iniciar sesión",setup:"Crear administrador",user:"Usuario",pass:"Contraseña",confirm:"Confirmar contraseña",dashboard:"Panel",users:"Usuarios",games:"Juegos",currencies:"Monedas",products:"Tienda / Productos",transactions:"Transacciones",permissions:"Permisos",settings:"Ajustes",backup:"Copia y restauración",logout:"Cerrar sesión",save:"Guardar",cancel:"Cancelar",add:"Añadir",edit:"Editar",delete:"Eliminar",balance:"Saldo",status:"Estado",actions:"Acciones",search:"Buscar",name:"Nombre",email:"Correo",id:"ID",description:"Descripción",price:"Precio",amount:"Cantidad",from:"Desde",to:"Hasta",create:"Crear",admin:"Administrador",local:"Solo local",warning:"Los datos se guardan en este navegador; no es una base de datos online segura.",account:"Cuenta",language:"Idioma",theme:"Tema",dark:"Oscuro",light:"Claro",reset:"Restablecer",export:"Exportar",import:"Importar",danger:"Zona de peligro",deleteAccount:"Eliminar mi cuenta",close:"Cerrar",overview:"Resumen",totalUsers:"Usuarios",totalGames:"Juegos",totalCurrencies:"Monedas",totalProducts:"Productos",totalTx:"Transacciones",welcome:"Bienvenido",quick:"Acciones rápidas",newUser:"Nuevo usuario",newGame:"Nuevo juego",newCurrency:"Nueva moneda",newProduct:"Nuevo producto",noData:"Sin datos.",created:"Creado",updated:"Actualizado",deleted:"Eliminado",role:"Rol",active:"Activo",frozen:"Congelado",banned:"Bloqueado",adminRole:"Admin",userRole:"Usuario",code:"ID / código del juego",symbol:"Símbolo",game:"Juego",type:"Tipo",unlimited:"Ilimitado",normal:"Normal",notes:"Notas",addFunds:"Añadir fondos",removeFunds:"Retirar fondos",transfer:"Transferir",reason:"Motivo",version:"Versión",updateUrl:"URL de actualización",saveSettings:"Guardar ajustes",appearance:"Apariencia",backupHint:"Exporta copias periódicamente.",confirmReset:"¿Restablecer todos los datos locales?",loginTitle:"Modren Bank",firstAdmin:"Configuración inicial",noAccounts:"No hay cuentas."}}
+}},
+ zh:{name:"中文",dir:"ltr",t:{brand:"Modren Bank",tag:"虚拟经济管理",login:"登录",setup:"创建管理员",user:"用户名",pass:"密码",confirm:"确认密码",dashboard:"仪表盘",users:"用户",games:"游戏",currencies:"货币",products:"商店 / 产品",transactions:"交易",permissions:"权限",settings:"设置",backup:"备份与恢复",logout:"退出",save:"保存",cancel:"取消",add:"添加",edit:"编辑",delete:"删除",balance:"余额",status:"状态",actions:"操作",search:"搜索",name:"名称",email:"邮箱",id:"ID",description:"描述",price:"价格",amount:"金额",from:"来自",to:"到",create:"创建",admin:"管理员",local:"仅本地模式",warning:"数据保存在此浏览器中，不是安全的在线数据库。",account:"账户",language:"语言",theme:"主题",dark:"深色",light:"浅色",reset:"重置本地数据",export:"导出备份",import:"导入备份",danger:"危险区域",deleteAccount:"删除我的账户",close:"关闭",overview:"概览",totalUsers:"用户",totalGames:"游戏",totalCurrencies:"货币",totalProducts:"产品",totalTx:"交易",welcome:"欢迎回来",quick:"快捷操作",newUser:"新用户",newGame:"新游戏",newCurrency:"新货币",newProduct:"新产品",noData:"暂无数据。",created:"创建成功",updated:"更新成功",deleted:"删除成功",role:"角色",active:"正常",frozen:"冻结",banned:"封禁",adminRole:"管理员",userRole:"用户",code:"游戏 ID / 代码",symbol:"符号",game:"游戏",type:"类型",unlimited:"无限",normal:"普通",notes:"备注",addFunds:"增加余额",removeFunds:"扣除余额",transfer:"转账",reason:"原因",version:"版本",updateUrl:"更新地址",saveSettings:"保存设置",appearance:"外观",backupHint:"定期导出备份。",confirmReset:"重置所有本地数据？",loginTitle:"Modren Bank",firstAdmin:"首次设置",noAccounts:"暂无账户。"}}
+}},
+ it:{name:"Italiano",dir:"ltr",t:{brand:"Modren Bank",tag:"Gestione dell'economia virtuale",login:"Accedi",setup:"Crea amministratore",user:"Nome utente",pass:"Password",confirm:"Conferma password",dashboard:"Dashboard",users:"Utenti",games:"Giochi",currencies:"Valute",products:"Negozio / Prodotti",transactions:"Transazioni",permissions:"Permessi",settings:"Impostazioni",backup:"Backup e ripristino",logout:"Esci",save:"Salva",cancel:"Annulla",add:"Aggiungi",edit:"Modifica",delete:"Elimina",balance:"Saldo",status:"Stato",actions:"Azioni",search:"Cerca",name:"Nome",email:"E-mail",id:"ID",description:"Descrizione",price:"Prezzo",amount:"Importo",from:"Da",to:"A",create:"Crea",admin:"Amministratore",local:"Solo locale",warning:"I dati sono salvati in questo browser e non sono un database online sicuro.",account:"Account",language:"Lingua",theme:"Tema",dark:"Scuro",light:"Chiaro",reset:"Reimposta",export:"Esporta",import:"Importa",danger:"Zona pericolosa",deleteAccount:"Elimina il mio account",close:"Chiudi",overview:"Panoramica",totalUsers:"Utenti",totalGames:"Giochi",totalCurrencies:"Valute",totalProducts:"Prodotti",totalTx:"Transazioni",welcome:"Bentornato",quick:"Azioni rapide",newUser:"Nuovo utente",newGame:"Nuovo gioco",newCurrency:"Nuova valuta",newProduct:"Nuovo prodotto",noData:"Nessun dato.",created:"Creato",updated:"Aggiornato",deleted:"Eliminato",role:"Ruolo",active:"Attivo",frozen:"Bloccato",banned:"Bannato",adminRole:"Admin",userRole:"Utente",code:"ID / codice gioco",symbol:"Simbolo",game:"Gioco",type:"Tipo",unlimited:"Illimitato",normal:"Normale",notes:"Note",addFunds:"Aggiungi fondi",removeFunds:"Rimuovi fondi",transfer:"Trasferisci",reason:"Motivo",version:"Versione",updateUrl:"URL aggiornamento",saveSettings:"Salva impostazioni",appearance:"Aspetto",backupHint:"Esporta regolarmente un backup.",confirmReset:"Reimpostare tutti i dati locali?",loginTitle:"Modren Bank",firstAdmin:"Prima configurazione",noAccounts:"Nessun account."}}
+}},
+ fa:{name:"فارسی",dir:"rtl",t:{brand:"Modren Bank",tag:"مدیریت اقتصاد مجازی",login:"ورود",setup:"ساخت مدیر",user:"نام کاربری",pass:"رمز عبور",confirm:"تأیید رمز عبور",dashboard:"داشبورد",users:"کاربران",games:"بازی‌ها",currencies:"ارزها",products:"فروشگاه / محصولات",transactions:"تراکنش‌ها",permissions:"دسترسی‌ها",settings:"تنظیمات",backup:"پشتیبان‌گیری و بازیابی",logout:"خروج",save:"ذخیره",cancel:"لغو",add:"افزودن",edit:"ویرایش",delete:"حذف",balance:"موجودی",status:"وضعیت",actions:"عملیات",search:"جستجو",name:"نام",email:"ایمیل",id:"شناسه",description:"توضیحات",price:"قیمت",amount:"مقدار",from:"از",to:"به",create:"ایجاد",admin:"مدیر",local:"فقط محلی",warning:"اطلاعات در این مرورگر ذخیره می‌شود و پایگاه داده آنلاین امن نیست.",account:"حساب",language:"زبان",theme:"پوسته",dark:"تیره",light:"روشن",reset:"بازنشانی",export:"خروجی پشتیبان",import:"ورود پشتیبان",danger:"منطقه خطر",deleteAccount:"حذف حساب من",close:"بستن",overview:"نمای کلی",totalUsers:"کاربران",totalGames:"بازی‌ها",totalCurrencies:"ارزها",totalProducts:"محصولات",totalTx:"تراکنش‌ها",welcome:"خوش آمدید",quick:"عملیات سریع",newUser:"کاربر جدید",newGame:"بازی جدید",newCurrency:"ارز جدید",newProduct:"محصول جدید",noData:"داده‌ای وجود ندارد.",created:"با موفقیت ایجاد شد",updated:"به‌روزرسانی شد",deleted:"حذف شد",role:"نقش",active:"فعال",frozen:"منجمد",banned:"مسدود",adminRole:"مدیر",userRole:"کاربر",code:"شناسه / کد بازی",symbol:"نماد",game:"بازی",type:"نوع",unlimited:"نامحدود",normal:"عادی",notes:"یادداشت",addFunds:"افزودن موجودی",removeFunds:"کسر موجودی",transfer:"انتقال",reason:"دلیل",version:"نسخه",updateUrl:"آدرس به‌روزرسانی",saveSettings:"ذخیره تنظیمات",appearance:"ظاهر",backupHint:"به‌صورت دوره‌ای پشتیبان بگیرید.",confirmReset:"همه داده‌های محلی بازنشانی شود؟",loginTitle:"Modren Bank",firstAdmin:"راه‌اندازی اولیه",noAccounts:"حسابی وجود ندارد."}}
+}}
+};
+let state=load();
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY));return x||fresh()}catch(e){return fresh()}}
+function fresh(){return {version:3,settings:{lang:"en",theme:"dark",bankName:"Modren Bank",defaultGame:"Modren Empire",updateUrl:""},users:[],games:[],currencies:[],products:[],transactions:[],permissions:[],session:null}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function t(k){return (LANGS[state.settings.lang]||LANGS.en).t[k]||LANGS.en.t[k]||k}
+function setLang(){document.documentElement.lang=state.settings.lang;document.documentElement.dir=LANGS[state.settings.lang].dir}
+function toast(msg){const d=document.createElement("div");d.className="toast";d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2300)}
+function uid(p="id"){return p+"_"+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4)}
+async function hash(s){if(window.crypto?.subtle){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}return btoa(unescape(encodeURIComponent(s)))}
+function fmt(n){return Number(n||0).toLocaleString(state.settings.lang==="ar"?"ar":state.settings.lang)}
+function statusPill(s){const m={active:"good",frozen:"warn",banned:"bad"};return `<span class="pill ${m[s]||""}">${esc(t(s)||s)}</span>`}
+function render(){setLang();document.body.innerHTML=state.session?appHTML():authHTML();bind()}
+function authHTML(){
+ const setup=state.users.length===0;
+ return `<div class="auth"><div class="authbox">
+ <div class="authlogo">₥</div><h1 style="text-align:center;margin:0">${esc(t("loginTitle"))}</h1>
+ <p class="muted" style="text-align:center">${esc(t("tag"))}</p>
+ <div class="card" style="padding:14px;margin:18px 0;background:#ffffff06">${setup?"👑 "+esc(t("needSetup")):"🔐 "+esc(t("local"))}</div>
+ <form id="authForm" class="form">
+ <div class="field"><label>${esc(t("user"))}</label><input id="au" required autocomplete="username"></div>
+ <div class="field"><label>${esc(t("pass"))}</label><input id="ap" required type="password" autocomplete="current-password"></div>
+ ${setup?`<div class="field"><label>${esc(t("confirm"))}</label><input id="ac" required type="password"></div>`:""}
+ <button class="btn">${esc(setup?t("setup"):t("login"))}</button></form>
+ <div class="section"><div class="field"><label>${esc(t("language"))}</label><select id="lang">${Object.entries(LANGS).map(([k,v])=>`<option value="${k}" ${k===state.settings.lang?"selected":""}>${v.name}</option>`).join("")}</select></div></div>
+ <p class="muted" style="font-size:12px;margin-top:16px">${esc(t("warning"))}</p>
+ </div></div>`
+}
+function appHTML(){
+ const u=state.users.find(x=>x.id===state.session); const title=state.page||"dashboard";
+ const nav=[["dashboard","⌂"],["users","👥"],["games","🎮"],["currencies","◈"],["products","🛒"],["transactions","↔"],["permissions","🔑"],["settings","⚙"],["backup","💾"]];
+ return `<div class="app"><header class="topbar"><button class="iconbtn" id="menu">☰</button><div class="brand"><span class="logo">₥</span>${esc(state.settings.bankName)}</div><span class="pill">${esc(u?.username||"")}</span><button class="iconbtn" id="logout">↪</button></header>
+ <div class="layout"><aside class="sidebar" id="side"><nav class="nav">${nav.map(([k,i])=>`<button class="${title===k?"active":""}" data-nav="${k}">${i} ${esc(t(k))}</button>`).join("")}</nav></aside>
+ <main class="content">${page(title)}</main></div></div>`
+}
+function page(p){
+ const pages={dashboard:dashboardPage,users:usersPage,games:gamesPage,currencies:currenciesPage,products:productsPage,transactions:transactionsPage,permissions:permissionsPage,settings:settingsPage,backup:backupPage};
+ return (pages[p]||dashboardPage)();
+}
+function head(title,sub=""){return `<div class="pagehead"><div><h1>${esc(title)}</h1>${sub?`<div class="muted">${esc(sub)}</div>`:""}</div></div>`}
+function dashboardPage(){
+ return head(t("dashboard"),t("welcome"))+`<div class="grid cards">
+ ${stat(t("totalUsers"),state.users.length,"👥")}${stat(t("totalGames"),state.games.length,"🎮")}${stat(t("totalCurrencies"),state.currencies.length,"◈")}${stat(t("totalProducts"),state.products.length,"🛒")}${stat(t("totalTx"),state.transactions.length,"↔")}
+ </div><div class="grid two section"><div class="card"><h2>${esc(t("quick"))}</h2><div class="actions">
+ <button class="btn" data-modal="user">${esc(t("newUser"))}</button><button class="btn" data-modal="game">${esc(t("newGame"))}</button><button class="btn" data-modal="currency">${esc(t("newCurrency"))}</button><button class="btn" data-modal="product">${esc(t("newProduct"))}</button></div></div>
+ <div class="card"><h2>${esc(t("account"))}</h2><div class="kpi"><span>${esc(t("user"))}</span><b>${esc(state.users.find(x=>x.id===state.session)?.username||"")}</b></div><div class="kpi" style="margin-top:10px"><span>${esc(t("role"))}</span><b>${esc(t("adminRole"))}</b></div></div></div>
+ <div class="card section"><h2>${esc(t("transactions"))}</h2>${txTable(5)}</div>`
+}
+function stat(label,n,icon){return `<div class="card"><div class="statlabel">${icon} ${esc(label)}</div><div class="stat">${fmt(n)}</div></div>`}
+function usersPage(){
+ const q=state._q||"";
+ let rows=state.users.filter(u=>(u.username+" "+(u.email||"")).toLowerCase().includes(q.toLowerCase()));
+ return head(t("users"))+`<div class="card"><div class="actions"><input id="search" placeholder="${esc(t("search"))}" value="${esc(q)}" style="flex:1;min-width:180px"><button class="btn" data-modal="user">${esc(t("newUser"))}</button></div><div class="tablewrap section"><table class="table"><thead><tr><th>${esc(t("user"))}</th><th>${esc(t("email"))}</th><th>${esc(t("role"))}</th><th>${esc(t("status"))}</th><th>${esc(t("actions"))}</th></tr></thead><tbody>${rows.map(u=>`<tr><td><b>${esc(u.username)}</b></td><td>${esc(u.email||"—")}</td><td>${u.role==="admin"?t("adminRole"):t("userRole")}</td><td>${statusPill(u.status)}</td><td><div class="actions">${u.id!==state.session?`<button class="btn small secondary" data-user="${u.id}" data-act="${u.status==="frozen"?"unfreeze":"freeze"}">${esc(u.status==="frozen"?t("unfreeze"):t("freeze"))}</button><button class="btn small danger" data-user="${u.id}" data-act="delete">${esc(t("delete"))}</button>`:`<span class="muted">—</span>`}</div></td></tr>`).join("")||`<tr><td colspan="5" class="empty">${esc(t("noData"))}</td></tr>`}</tbody></table></div></div>`
+}
+function gamesPage(){
+ return head(t("games"))+`<div class="card"><div class="actions"><button class="btn" data-modal="game">${esc(t("newGame"))}</button></div><div class="grid cards section">${state.games.map(g=>`<div class="card"><div class="kpi"><h2 style="margin:0">${esc(g.name)}</h2><span class="pill">${esc(g.code)}</span></div><p class="muted">${esc(g.description||"")}</p><div class="kpi"><span>${esc(t("version"))}</span><b>${esc(g.version||"1.0.0")}</b></div></div>`).join("")||`<div class="empty">${esc(t("noData"))}</div>`}</div></div>`
+}
+function currenciesPage(){
+ return head(t("currencies"))+`<div class="card"><div class="actions"><button class="btn" data-modal="currency">${esc(t("newCurrency"))}</button></div><div class="tablewrap section"><table class="table"><thead><tr><th>${esc(t("name"))}</th><th>${esc(t("symbol"))}</th><th>${esc(t("game"))}</th><th>${esc(t("actions"))}</th></tr></thead><tbody>${state.currencies.map(c=>`<tr><td>${esc(c.name)}</td><td><b>${esc(c.symbol)}</b></td><td>${esc(state.games.find(g=>g.id===c.gameId)?.name||"—")}</td><td><button class="btn small danger" data-currency="${c.id}" data-act="delete">${esc(t("delete"))}</button></td></tr>`).join("")||`<tr><td colspan="4" class="empty">${esc(t("noData"))}</td></tr>`}</tbody></table></div></div>`
+}
+function productsPage(){
+ return head(t("products"))+`<div class="card"><div class="actions"><button class="btn" data-modal="product">${esc(t("newProduct"))}</button></div><div class="grid cards section">${state.products.map(p=>`<div class="card"><div class="kpi"><h2 style="margin:0">${esc(p.name)}</h2><span class="pill">${fmt(p.price)} ${esc(state.currencies.find(c=>c.id===p.currencyId)?.symbol||"")}</span></div><p class="muted">${esc(p.description||"")}</p><button class="btn small danger" data-product="${p.id}" data-act="delete">${esc(t("delete"))}</button></div>`).join("")||`<div class="empty">${esc(t("noData"))}</div>`}</div></div>`
+}
+function txTable(limit){
+ const arr=state.transactions.slice(-limit).reverse();
+ return `<div class="tablewrap"><table class="table"><thead><tr><th>${esc(t("amount"))}</th><th>${esc(t("from"))}</th><th>${esc(t("to"))}</th><th>${esc(t("reason"))}</th></tr></thead><tbody>${arr.map(x=>`<tr><td>${fmt(x.amount)} ${esc(x.symbol||"")}</td><td>${esc(x.from||"—")}</td><td>${esc(x.to||"—")}</td><td>${esc(x.reason||"")}</td></tr>`).join("")||`<tr><td colspan="4" class="empty">${esc(t("noData"))}</td></tr>`}</tbody></table></div>`
+}
+function transactionsPage(){return head(t("transactions"))+`<div class="card">${txTable(100)}</div>`}
+function permissionsPage(){
+ return head(t("permissions"))+`<div class="card"><div class="tablewrap"><table class="table"><thead><tr><th>${esc(t("user"))}</th><th>${esc(t("game"))}</th><th>${esc(t("type"))}</th><th>${esc(t("actions"))}</th></tr></thead><tbody>${state.permissions.map(p=>{const u=state.users.find(x=>x.id===p.userId),g=state.games.find(x=>x.id===p.gameId);return `<tr><td>${esc(u?.username||"—")}</td><td>${esc(g?.name||"—")}</td><td><span class="pill">${esc(p.unlimited?t("unlimited"):t("normal"))}</span></td><td><button class="btn small secondary" data-perm="${p.id}" data-act="toggle">${esc(p.unlimited?t("revoke"):t("grant"))}</button></td></tr>`}).join("")||`<tr><td colspan="4" class="empty">${esc(t("noData"))}</td></tr>`}</tbody></table></div></div>`
+}
+function settingsPage(){
+ return head(t("settings"))+`<div class="grid two"><div class="card"><h2>${esc(t("appearance"))}</h2><form id="settingsForm" class="form">
+ <div class="field"><label>${esc(t("language"))}</label><select name="lang">${Object.entries(LANGS).map(([k,v])=>`<option value="${k}" ${k===state.settings.lang?"selected":""}>${v.name}</option>`).join("")}</select></div>
+ <div class="field"><label>${esc(t("theme"))}</label><select name="theme"><option value="dark" ${state.settings.theme==="dark"?"selected":""}>${esc(t("dark"))}</option><option value="light" ${state.settings.theme==="light"?"selected":""}>${esc(t("light"))}</option></select></div>
+ <div class="field"><label>${esc(t("name"))}</label><input name="bankName" value="${esc(state.settings.bankName)}"></div>
+ <div class="field"><label>${esc(t("updateUrl"))}</label><input name="updateUrl" value="${esc(state.settings.updateUrl||"")}" placeholder="https://..."></div>
+ <button class="btn">${esc(t("saveSettings"))}</button></form></div>
+ <div class="card dangerzone"><h2>${esc(t("danger"))}</h2><p class="muted">${esc(t("warning"))}</p><button class="btn danger" id="deleteMine">${esc(t("deleteAccount"))}</button></div></div>`
+}
+function backupPage(){
+ return head(t("backup"))+`<div class="grid two"><div class="card"><h2>${esc(t("export"))}</h2><p class="muted">${esc(t("backupHint"))}</p><button class="btn" id="export">${esc(t("export"))}</button></div><div class="card"><h2>${esc(t("import"))}</h2><input type="file" id="importFile" accept=".json,application/json"><p class="muted" style="font-size:12px">JSON backup only.</p></div></div>`
+}
+function modal(kind){
+ let body="",title="";
+ if(kind==="user"){title=t("newUser");body=`<form id="modalForm" class="form" data-kind="user"><div class="field"><label>${esc(t("user"))}</label><input name="username" required></div><div class="field"><label>${esc(t("email"))}</label><input name="email" type="email"></div><div class="field"><label>${esc(t("pass"))}</label><input name="password" type="password" required minlength="8"></div><div class="field"><label>${esc(t("role"))}</label><select name="role"><option value="user">${esc(t("userRole"))}</option><option value="admin">${esc(t("adminRole"))}</option></select></div><button class="btn">${esc(t("create"))}</button></form>`}
+ if(kind==="game"){title=t("newGame");body=`<form id="modalForm" class="form" data-kind="game"><div class="field"><label>${esc(t("name"))}</label><input name="name" required></div><div class="field"><label>${esc(t("code"))}</label><input name="code" required></div><div class="field"><label>${esc(t("description"))}</label><textarea name="description"></textarea></div><div class="field"><label>${esc(t("version"))}</label><input name="version" value="1.0.0"></div><button class="btn">${esc(t("create"))}</button></form>`}
+ if(kind==="currency"){title=t("newCurrency");body=`<form id="modalForm" class="form" data-kind="currency"><div class="field"><label>${esc(t("name"))}</label><input name="name" required></div><div class="field"><label>${esc(t("symbol"))}</label><input name="symbol" required></div><div class="field"><label>${esc(t("game"))}</label><select name="gameId">${state.games.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join("")}</select></div><button class="btn">${esc(t("create"))}</button></form>`}
+ if(kind==="product"){title=t("newProduct");body=`<form id="modalForm" class="form" data-kind="product"><div class="field"><label>${esc(t("name"))}</label><input name="name" required></div><div class="field"><label>${esc(t("description"))}</label><textarea name="description"></textarea></div><div class="field"><label>${esc(t("price"))}</label><input name="price" type="number" min="0" step="0.01" required></div><div class="field"><label>${esc(t("currencies"))}</label><select name="currencyId">${state.currencies.map(c=>`<option value="${c.id}">${esc(c.name)} (${esc(c.symbol)})</option>`).join("")}</select></div><button class="btn">${esc(t("create"))}</button></form>`}
+ return `<div class="modal" id="modal"><div class="modalbox"><div class="pagehead"><h2>${esc(title)}</h2><button class="iconbtn" id="closeModal">×</button></div>${body}</div></div>`
+}
+function bind(){
+ document.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>{state.page=b.dataset.nav;save();render()});
+ const m=document.getElementById("menu");if(m)m.onclick=()=>document.getElementById("side").classList.toggle("open");
+ const lo=document.getElementById("logout");if(lo)lo.onclick=()=>{state.session=null;save();render()};
+ const lang=document.getElementById("lang");if(lang)lang.onchange=()=>{state.settings.lang=lang.value;save();render()};
+ const auth=document.getElementById("authForm");if(auth)auth.onsubmit=async e=>{e.preventDefault();const u=document.getElementById("au").value.trim(),p=document.getElementById("ap").value; if(state.users.length===0){if(p!==document.getElementById("ac").value)return toast(t("passwordMismatch"));state.users.push({id:uid("usr"),username:u,email:"",hash:await hash(p),role:"admin",status:"active",created:Date.now()});state.session=state.users[0].id;seed();save();return render()}const found=state.users.find(x=>x.username.toLowerCase()===u.toLowerCase());if(!found||found.hash!==await hash(p)||found.status==="banned")return toast(t("loginBad"));if(found.status==="frozen")return toast(t("frozen"));state.session=found.id;save();render()};
+ const sf=document.getElementById("search");if(sf)sf.oninput=()=>{state._q=sf.value;render();setTimeout(()=>{const x=document.getElementById("search");x?.focus();x?.setSelectionRange(x.value.length,x.value.length)},0)};
+ document.querySelectorAll("[data-modal]").forEach(b=>b.onclick=()=>{document.body.insertAdjacentHTML("beforeend",modal(b.dataset.modal));bindModal()});
+ document.querySelectorAll("[data-act]").forEach(b=>b.onclick=()=>action(b));
+ const s=document.getElementById("settingsForm");if(s)s.onsubmit=e=>{e.preventDefault();const f=new FormData(s);state.settings.lang=f.get("lang");state.settings.theme=f.get("theme");state.settings.bankName=f.get("bankName")||"Modren Bank";state.settings.updateUrl=f.get("updateUrl")||"";save();render();toast(t("updated"))};
+ const ex=document.getElementById("export");if(ex)ex.onclick=exportData;
+ const im=document.getElementById("importFile");if(im)im.onchange=importData;
+ const dm=document.getElementById("deleteMine");if(dm)dm.onclick=()=>{if(confirm(t("confirmDelete"))){state.users=state.users.filter(x=>x.id!==state.session);state.session=null;save();render()}};
+}
+function bindModal(){const c=document.getElementById("closeModal");if(c)c.onclick=()=>document.getElementById("modal").remove();const f=document.getElementById("modalForm");if(f)f.onsubmit=e=>{e.preventDefault();const d=Object.fromEntries(new FormData(f)),k=f.dataset.kind;if(k==="user"){if(state.users.some(x=>x.username.toLowerCase()===d.username.toLowerCase()))return toast(t("userExists"));hash(d.password).then(h=>{state.users.push({id:uid("usr"),username:d.username,email:d.email,hash:h,role:d.role,status:"active",created:Date.now()});save();document.getElementById("modal").remove();render();toast(t("created"))})}else{if(k==="game")state.games.push({id:uid("game"),name:d.name,code:d.code,description:d.description,version:d.version||"1.0.0"});if(k==="currency")state.currencies.push({id:uid("cur"),name:d.name,symbol:d.symbol,gameId:d.gameId});if(k==="product")state.products.push({id:uid("prd"),name:d.name,description:d.description,price:Number(d.price),currencyId:d.currencyId});save();document.getElementById("modal").remove();render();toast(t("created"))}}}
+function action(b){
+ const id=b.dataset.user||b.dataset.currency||b.dataset.product||b.dataset.perm, a=b.dataset.act;
+ if(!confirm(t("confirmDelete")))return;
+ if(b.dataset.user){const u=state.users.find(x=>x.id===id);if(a==="delete")state.users=state.users.filter(x=>x.id!==id);else if(a==="freeze")u.status="frozen";else if(a==="unfreeze")u.status="active"}
+ if(b.dataset.currency&&a==="delete")state.currencies=state.currencies.filter(x=>x.id!==id);
+ if(b.dataset.product&&a==="delete")state.products=state.products.filter(x=>x.id!==id);
+ if(b.dataset.perm&&a==="toggle"){const p=state.permissions.find(x=>x.id===id);p.unlimited=!p.unlimited}
+ save();render();toast(t("updated"))
+}
+function seed(){
+ if(!state.games.length){state.games.push({id:uid("game"),name:"Modren Empire",code:"MODREN-EMPIRE",description:"Main game integration",version:"1.0.0"});}
+ if(!state.currencies.length){state.currencies.push({id:uid("cur"),name:"MOD",symbol:"MOD",gameId:state.games[0].id});}
+}
+function exportData(){const clean=JSON.parse(JSON.stringify(state));const blob=new Blob([JSON.stringify(clean,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="modren-bank-backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function importData(e){const file=e.target.files?.[0];if(!file)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!x||!x.users||!x.settings)throw 0;state=x;save();render();toast(t("updated"))}catch(_){toast("Invalid backup")}};r.readAsText(file)}
+render();
+})();
+</script>
+</body>
+</html>
