@@ -1,0 +1,22 @@
+{
+  "name": "Modren Bank",
+  "version": "2.0.0",
+  "single_project_folder": true,
+  "netlify": {
+    "build_command": "npm run build",
+    "publish_directory": "dist",
+    "base_directory": ""
+  },
+  "files": [
+    "NETLIFY.txt",
+    "README.md",
+    "index.html",
+    "package.json",
+    "src/App.jsx",
+    "src/i18n.js",
+    "src/main.jsx",
+    "src/storage.js",
+    "src/styles.css",
+    "vite.config.js"
+  ]
+}

@@ -1,0 +1,3 @@
+Build command: npm run build
+Publish directory: dist
+Base directory: leave empty
