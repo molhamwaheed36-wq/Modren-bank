@@ -8,6 +8,7 @@ import {
   uid,
 } from "./storage";
 import { languages } from "./i18n";
+import { adminCount, createFirstAdmin, loginUser } from "./supabase";
 
 const nav = [
   ["dashboard", "⌂"],
@@ -43,11 +44,44 @@ export default function App() {
   const [db, setDb] = useDB();
   const [page, setPage] = useState("dashboard");
   const [open, setOpen] = useState(false);
+  const [cloudAdmin, setCloudAdmin] = useState(null);
+  const [authReady, setAuthReady] = useState(false);
+  const [hasAdmin, setHasAdmin] = useState(true);
   const lang = languages[db.settings.language] || languages.en;
   const t = lang.t;
-  const admin = db.users.find((u) => u.id === db.session);
 
-  // Auth screen
+  // Restore cloud session from localStorage session id + cloudAdmin snapshot
+  useEffect(() => {
+    (async () => {
+      try {
+        const count = await adminCount();
+        setHasAdmin(count > 0);
+        if (db.session && db.cloudUser && db.cloudUser.id === db.session) {
+          setCloudAdmin(db.cloudUser);
+        }
+      } catch (e) {
+        console.error(e);
+        // fallback: treat as no admin if network fails on first load
+        setHasAdmin(false);
+      } finally {
+        setAuthReady(true);
+      }
+    })();
+  }, []);
+
+  const admin = cloudAdmin;
+
+  if (!authReady) {
+    return (
+      <div className="auth">
+        <div className="authCard" style={{ textAlign: "center" }}>
+          <div className="logo">₥</div>
+          <p>Loading…</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!admin) {
     return (
       <Auth
@@ -60,34 +94,54 @@ export default function App() {
             settings: { ...x.settings, language: v },
           }))
         }
-        users={db.users}
+        hasAdmin={hasAdmin}
         login={async (u, p) => {
-          const x = db.users.find(
-            (a) => a.username.toLowerCase() === u.toLowerCase()
-          );
-          if (!x || x.status !== "active" || (await hashPassword(p)) !== x.hash)
+          try {
+            const hash = await hashPassword(p);
+            const res = await loginUser(u, hash);
+            if (res?.error === "wrong" || !res?.id) return t.wrong;
+            const user = {
+              id: res.id,
+              username: res.username,
+              role: res.role,
+              status: res.status,
+              email: res.email || "",
+            };
+            setCloudAdmin(user);
+            setDb({ ...db, session: user.id, cloudUser: user });
+            return "";
+          } catch {
             return t.wrong;
-          setDb({ ...db, session: x.id });
-          return "";
+          }
         }}
         create={async (u, p, c) => {
-          // Only the very first user can become admin
-          if (db.users.length > 0) return t.adminLocked || "Admin already exists. Login only.";
+          if (hasAdmin) return t.adminLocked;
           if (p.length < 8) return t.passwordRule;
           if (p !== c) return t.passwordMismatch;
-          if (db.users.some((x) => x.username.toLowerCase() === u.toLowerCase()))
-            return t.exists;
-
-          const x = {
-            id: uid("usr"),
-            username: u,
-            email: "",
-            hash: await hashPassword(p),
-            role: "admin",
-            status: "active",
-          };
-          setDb({ ...db, users: [...db.users, x], session: x.id });
-          return "";
+          try {
+            const hash = await hashPassword(p);
+            const res = await createFirstAdmin(u, hash);
+            if (res?.error === "admin_exists") {
+              setHasAdmin(true);
+              return t.adminLocked;
+            }
+            if (res?.error === "exists") return t.exists;
+            if (!res?.id) return t.wrong;
+            const user = {
+              id: res.id,
+              username: res.username,
+              role: res.role || "admin",
+              status: res.status || "active",
+              email: "",
+            };
+            setHasAdmin(true);
+            setCloudAdmin(user);
+            setDb({ ...db, session: user.id, cloudUser: user });
+            return "";
+          } catch (e) {
+            console.error(e);
+            return String(e.message || e);
+          }
         }}
       />
     );
@@ -118,7 +172,10 @@ export default function App() {
         <span className="admin">● {admin.username}</span>
         <button
           className="iconBtn"
-          onClick={() => setDb({ ...db, session: null })}
+          onClick={() => {
+            setCloudAdmin(null);
+            setDb({ ...db, session: null, cloudUser: null });
+          }}
           title={t.logout}
         >
           ↪
@@ -183,17 +240,15 @@ export default function App() {
   );
 }
 
-/* ───────────────── Auth ───────────────── */
-function Auth({ t, langs, lang, setLang, users, login, create }) {
-  // Only allow "create" mode when there are ZERO users
-  const canCreateAdmin = users.length === 0;
+function Auth({ t, langs, lang, setLang, hasAdmin, login, create }) {
+  const canCreateAdmin = !hasAdmin;
   const [m, setM] = useState(canCreateAdmin ? "create" : "login");
   const [u, setU] = useState("");
   const [p, setP] = useState("");
   const [c, setC] = useState("");
   const [e, setE] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  // Force login mode if users already exist
   useEffect(() => {
     if (!canCreateAdmin && m === "create") setM("login");
   }, [canCreateAdmin, m]);
@@ -204,7 +259,15 @@ function Auth({ t, langs, lang, setLang, users, login, create }) {
         className="authCard"
         onSubmit={async (x) => {
           x.preventDefault();
-          setE(m === "login" ? await login(u, p) : await create(u, p, c));
+          setBusy(true);
+          setE("");
+          try {
+            const err =
+              m === "login" ? await login(u, p) : await create(u, p, c);
+            if (err) setE(err);
+          } finally {
+            setBusy(false);
+          }
         }}
       >
         <div className="logo">₥</div>
@@ -238,8 +301,8 @@ function Auth({ t, langs, lang, setLang, users, login, create }) {
           />
         )}
 
-        <button className="primary" type="submit">
-          {m === "login" ? t.login : t.createAdmin}
+        <button className="primary" type="submit" disabled={busy}>
+          {busy ? "…" : m === "login" ? t.login : t.createAdmin}
         </button>
 
         {e && <div className="error">{e}</div>}
@@ -252,13 +315,8 @@ function Auth({ t, langs, lang, setLang, users, login, create }) {
           ))}
         </select>
 
-        {/* No toggle to create admin when users already exist */}
         {canCreateAdmin && m === "login" && (
-          <button
-            type="button"
-            className="link"
-            onClick={() => setM("create")}
-          >
+          <button type="button" className="link" onClick={() => setM("create")}>
             {t.createAdmin}
           </button>
         )}
@@ -273,7 +331,6 @@ function Auth({ t, langs, lang, setLang, users, login, create }) {
   );
 }
 
-/* ───────────────── Shared UI ───────────────── */
 function Header({ title, sub }) {
   return (
     <div className="head">
@@ -664,7 +721,7 @@ function Backup({ db, setDb, t }) {
               r.onload = () => {
                 try {
                   const x = JSON.parse(r.result);
-                  setDb({ ...initialState(), ...x, session: db.session });
+                  setDb({ ...initialState(), ...x, session: db.session, cloudUser: db.cloudUser });
                 } catch {}
               };
               r.readAsText(f);
