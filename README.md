@@ -1,11 +1,31 @@
 # Modren Bank 2.0
+
 Local-first virtual administration system for the Modren ecosystem.
 
-Included: admin sign-in/creation, users, games/Game IDs, virtual currencies, accounts/balances, transactions, debts, virtual cards, permissions including targeted unlimited access, settings, seven requested languages, dark/light mode, responsive mobile UI, JSON backup/restore, account deletion.
+## Features
+- Single administrator (first account only — no further admin creation)
+- Users, Games, Currencies, Accounts, Transactions, Debts, Virtual Cards
+- Permissions (targeted unlimited access)
+- Settings (language + dark/light theme)
+- JSON Backup / Restore
+- 7 languages (including Arabic RTL)
+- Fully responsive
 
-Modren Empire's product shop remains managed inside the game. This bank is not a real bank and handles no real money.
+> This is **not** a real bank. No real money is handled.
 
-Netlify:
-Build command: `npm run build`
-Publish directory: `dist`
-Base directory: empty
+## Netlify Deploy
+
+| Setting | Value |
+|---------|-------|
+| Build command | `npm run build` |
+| Publish directory | `dist` |
+| Base directory | *(leave empty)* |
+
+A `netlify.toml` is included for automatic configuration.
+
+## Local development
+
+```bash
+npm install
+npm run dev
+```
